@@ -120,5 +120,6 @@ via*.json
 # Include png files from own keymap folders
 !keyboards/sofle_choc/keymaps/tobstar/*.png
 
-# Exclude draw.io temp files
+# Exclude draw.io temp and backup files
 *.dtmp
+*.bkp
