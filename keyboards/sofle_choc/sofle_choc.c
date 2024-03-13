@@ -14,35 +14,75 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "quantum.h"
+#include "sofle_choc.h"
 
-#ifdef OLED_ENABLE
-
-static void render_logo(void) {
-    static const char PROGMEM qmk_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
-        0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4,
-        0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF, 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0x00
-    };
-
-    oled_write_P(qmk_logo, false);
-}
-
-oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
-    if (is_keyboard_master()) {
-        return OLED_ROTATION_180;
+#ifdef ENCODER_ENABLE
+bool encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!encoder_update_user(index, clockwise)) { return false; }
+    if (index == 0) {
+        if (clockwise) {
+            tap_code_delay(KC_VOLU, 10);
+        } else {
+            tap_code_delay(KC_VOLD, 10);
+        }
     }
-    return rotation;
+    return true;
 }
+#endif
 
-bool oled_task_kb(void) {
-    if (!oled_task_user()) {
-        return false;
+#ifdef RGB_MATRIX_ENABLE
+
+led_config_t g_led_config = {
+    {
+        // Key Matrix to LED Index
+        // Left
+        { 28, 21, 20, 11, 10,      0 },
+        { 27, 22, 19, 12,  9,      1 },
+        { 26, 23, 18, 13,  8,      2 },
+        { 25, 24, 17, 14,  7,      3 },
+        { 16, 15,  6,  5,  4, NO_LED },
+
+        // Right
+        { 57, 50, 49, 40, 39,     29 },
+        { 56, 51, 48, 41, 38,     30 },
+        { 55, 52, 47, 42, 37,     31 },
+        { 54, 53, 46, 43, 36,     32 },
+        { 45, 44, 35, 34, 33, NO_LED }
+    }, {
+        // LED Index to Physical Position
+        // Left
+        {  95,   7 }, {  95,  21 }, {  95,  36 }, {  95,  50 }, { 115,  64 },
+        {  95,  64 }, {  76,  62 }, {  76,  48 }, {  76,  33 }, {  76,  19 },
+        {  76,   5 }, {  57,   3 }, {  57,  17 }, {  57,  31 }, {  57,  46 },
+        {  57,  62 }, {  38,  64 }, {  38,  48 }, {  38,  33 }, {  38,  19 },
+        {  38,   5 }, {  19,   7 }, {  19,  21 }, {  19,  36 }, {  19,  50 },
+        {   0,  50 }, {   0,  36 }, {   0,  21 }, {   0,   7 },
+
+        // Right
+        { 129,   7 }, { 129,  21 }, { 129,  36 }, { 129,  50 }, { 119, 64 },
+        { 129,  64 }, { 148,  62 }, { 148,  48 }, { 148,  33 }, { 148, 19 },
+        { 148,   5 }, { 167,   3 }, { 167,  17 }, { 167,  31 }, { 167, 46 },
+        { 167,  62 }, { 186,  64 }, { 186,  48 }, { 186,  33 }, { 186, 19 },
+        { 186,   5 }, { 209,   7 }, { 209,  21 }, { 209,  36 }, { 209, 50 },
+        { 224,  50 }, { 224,  36 }, { 224,  21 }, { 224,   7 }
+    }, {
+        // LED Index to Flag
+        // Left
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1,
+
+        // Right
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1,
+        1, 1, 1, 1
     }
-
-    render_logo();
-
-    return false;
-}
+};
 
 #endif
