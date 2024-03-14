@@ -117,8 +117,9 @@ compile_commands.json
 via*.json
 /keyboards/**/keymaps/vial/*
 
-# Include png files from own keymap folders
+# Include png and pdf files from own keymap folders
 !keyboards/sofle_choc/keymaps/tobstar/*.png
+!keyboards/sofle_choc/keymaps/tobstar/*.pdf
 
 # Exclude draw.io temp and backup files
 *.dtmp
